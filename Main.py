@@ -22,7 +22,7 @@ pygame.init()                                                                   
 infoMonitor = pygame.display.Info()
 Constants.screenWidth = infoMonitor.current_w
 Constants.screenHeight = infoMonitor.current_h
-screen = pygame.display.set_mode((Constants.screenWidth,Constants.screenHeight), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)#Initialisation de la fenetre
+screen = pygame.display.set_mode((Constants.screenWidth,Constants.screenHeight), pygame.HWSURFACE|pygame.DOUBLEBUF)#Initialisation de la fenetre
 
 pygame.display.set_caption('PyBall')
 
