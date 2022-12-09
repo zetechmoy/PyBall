@@ -23,6 +23,70 @@ def clickIsInRect(clickPos, rect, objPos):                                  #Ret
     return False
 
 @abstractmethod
+def getPointAtAngle(x, y, angle, distance):
+    return (x + distance * math.cos(math.radians(angle)), y + distance * math.sin(math.radians(angle)))
+
+@abstractmethod
+def isInLine(x, y, angle, x2, y2, w2, h2):									#Retourne True si le point (x,y) est dans la ligne de l'angle angle et de la position x2,y2 et de la taille w2,h2
+    if angle == 90:
+        if (x2 - w2/2 <= x <= x2 + w2/2) and (y2 <= y <= y2 + h2):
+            return True
+        return False
+    elif angle == 270:
+        if (x2 - w2/2 <= x <= x2 + w2/2) and (y2 - h2 <= y <= y2):
+            return True
+        return False
+    elif angle == 0:
+        if (x2 <= x <= x2 + w2) and (y2 - h2/2 <= y <= y2 + h2/2):
+            return True
+        return False
+    elif angle == 180:
+        if (x2 - w2 <= x <= x2) and (y2 - h2/2 <= y <= y2 + h2/2):
+            return True
+        return False
+
+    a = math.tan(math.radians(angle))
+    b = y2 - a*x2
+    if (x2 <= x <= x2 + w2) and (y == a*x + b):
+        return True
+    return False
+
+@abstractmethod
+def getIntersections(lineFrom, lineTo, x, y, w, h):							#Retourne le point d'intersection entre la ligne et le rectangle
+
+    P0 = lineFrom
+    P1 = lineTo
+    Q0left = (x, y)
+    Q1left = (x, y + h)
+
+    Q0right = (x + w, y)
+    Q1right = (x + w, y + h)
+
+    Q0top = (x, y)
+    Q1top = (x + w, y)
+
+    Q0bottom = (x, y + h)
+    Q1bottom = (x + w, y + h)
+
+    left = lineLineIntersect(P0, P1, Q0left, Q1left)
+    right = lineLineIntersect(P0, P1, Q0right, Q1right)
+    top = lineLineIntersect(P0, P1, Q0top, Q1top)
+    bottom = lineLineIntersect(P0, P1, Q0bottom, Q1bottom)
+
+    return [x for x in [left, right, top, bottom] if x]
+
+@abstractmethod
+def lineLineIntersect(P0, P1, Q0, Q1):  
+    d = (P1[0]-P0[0]) * (Q1[1]-Q0[1]) + (P1[1]-P0[1]) * (Q0[0]-Q1[0]) 
+    if d == 0:
+        return None
+    t = ((Q0[0]-P0[0]) * (Q1[1]-Q0[1]) + (Q0[1]-P0[1]) * (Q0[0]-Q1[0])) / d
+    u = ((Q0[0]-P0[0]) * (P1[1]-P0[1]) + (Q0[1]-P0[1]) * (P0[0]-P1[0])) / d
+    if 0 <= t <= 1 and 0 <= u <= 1:
+        return round(P1[0] * t + P0[0] * (1-t)), round(P1[1] * t + P0[1] * (1-t))
+    return None
+
+@abstractmethod
 def collision(rect1,rect2):													#Retourne True si rect1 et rect2 se sont rencontrés
     if rect1.colliderect(rect2):
         return True

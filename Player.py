@@ -4,7 +4,7 @@
 # Created:     	04/10/2015
 #-------------------------------------------------------------------------------
 import os
-import pygame, math
+import pygame, math, uuid
 from pygame.locals import *
 
 import Helper
@@ -19,6 +19,7 @@ class Player:
 
     def __init__(self, gmp, posX, posY, w, h, gms):
         pygame.init()                                                           #Initialise le module pygame
+        self.id = uuid.uuid4()
         self.gamePanel = gmp                                                    #Jesaispasquoimettrec'estevident
         self.gameScene = gms
         self.width = w                                                          #Largeur du joueur
@@ -74,7 +75,7 @@ class Player:
     def newSpritesheet(self):
         self.animation.setSpritesheet(self.img)
 
-    def event(self, event):
+    def onEvent(self, event):
         #En utilisant la barre d'espace
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
@@ -122,6 +123,9 @@ class Player:
                 self.pos.y += self.dy
             else:
                 self.pos.y += 3*self.dy
+
+            moveEvent = pygame.event.Event(Constants.PLAYER_MOVE_EVENT, {"id": self.id, "x": self.pos.x, "y": self.pos.y, "width": self.width, "height": self.height})
+            pygame.event.post(moveEvent)
 
             self.lastPos.append((self.pos.x, self.pos.y))
 
@@ -174,6 +178,5 @@ class Player:
         return self.animation
 
     def destroy(self):
-        #make the animation
-
-        pass
+        destroyEvent = pygame.event.Event(Constants.PLAYER_DELETE_EVENT, {"id": self.id, "x": self.pos.x, "y": self.pos.y, "width": self.width, "height": self.height})
+        pygame.event.post(destroyEvent)

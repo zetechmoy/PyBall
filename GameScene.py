@@ -100,6 +100,9 @@ class GameScene(Scene):
         )
         self.backButtonPos = (10, 10)
 
+        startEvent = pygame.event.Event(Constants.START_EVENT)
+        pygame.event.post(startEvent)
+
     def SpawnPlatform(self):													#Creer une platforme et l'ajoute a la liste de platformes
         if(self.bonus != None):
             self.platformDelay = self.bonus.timeBetween2Platform
@@ -135,7 +138,7 @@ class GameScene(Scene):
         self.bonusTextPos.y = int(self.coinTextPos.y + self.coinText.get_rect()[3])
 
     def onEvent(self, event):
-        self.player.event(event)                                                #Partage les Events au player
+        self.player.onEvent(event)                                                #Partage les Events au player
         if event.type == pygame.MOUSEBUTTONUP:                                  #Si le click est UP
             pos = pygame.mouse.get_pos()                                        #Recupere la position du click
 
@@ -152,6 +155,8 @@ class GameScene(Scene):
 
     def gameEnd(self):															#Fin du jeu, on detruit le player et on change de scene
         self.player.destroy()
+        endEvent = pygame.event.Event(Constants.END_EVENT)
+        pygame.event.post(endEvent)
         if ScoreManager.get() < self.score:
             ScoreManager.save(self.score)
         self.gamePanel.changeScene(MainMenuScene.MainMenuScene(self.gamePanel))
@@ -228,6 +233,7 @@ class GameScene(Scene):
                          self.platforms[i].fast = 1
 
                 if(self.platforms[i].X() + self.platforms[i].getWidth() < 0):                     #---+Si la platforme est sortie de l'ecran
+                    self.platforms[i].destroy()                                         #---+----On detruit la plateforme
                     self.platforms.pop(i)                                        #---+----On supprime la plateforme
 
                     if(self.bonus != None):

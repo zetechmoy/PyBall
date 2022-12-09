@@ -44,12 +44,7 @@ class Scene(object):
 
     @abstractmethod
     def draw(self, fen):
-        if startAnimation == True:
-            pygame.draw.circle(fen, Colors.Colors.deep_purple, (Constants.Constants.screenWidth/2, Constants.Constants.screenHeight/2), radius, 2*radius)
-            if radius >= math.sqrt(math.sqrt((int(Constants.Constants.screenWidth/2))^2 + (int(Constants.Constants.screenHeight/2))^2)):
-                self.startAnimation = False
-                self.created = True
-                onCreate(self)
+        pass
 
     @abstractmethod
     def onEnd(self):

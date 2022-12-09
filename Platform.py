@@ -4,7 +4,7 @@
 # Created:     	04/10/2015
 #-------------------------------------------------------------------------------
 
-import random, pygame, Constants, Helper
+import random, pygame, uuid, Constants, Helper
 
 class Platform:
 
@@ -12,9 +12,10 @@ class Platform:
 
     def __init__(self, yMin, yMax, gms, gmp):
         pygame.init()
+        self.id = uuid.uuid4()
         self.gameScene = gms
         self.gamePanel = gmp
-        self.width = random.randint(75, 100)*2
+        self.width = random.randint(75, 100)
         self.height = self.width
         self.x = self.gamePanel.screenWidth + 100
         self.y = random.randint(yMin, yMax-self.height)
@@ -33,7 +34,10 @@ class Platform:
         if self.gameScene.getCurrentTheme().platform != self.currentPlatformColor:
             self.img = pygame.image.load('./drawable/'+self.gameScene.getCurrentTheme().platform).convert_alpha()
             self.img = pygame.transform.scale(self.img, (self.width, self.height))
-        #print("platform.x :",self.x)
+        
+        # Send event move
+        moveEvent = pygame.event.Event(Constants.PLATFORM_MOVE_EVENT, {"id": self.id, "x": self.x, "y": self.y, "width": self.width, "height": self.height})
+        pygame.event.post(moveEvent)
 
 
     def draw(self, fenetre):
@@ -66,3 +70,7 @@ class Platform:
         s = pygame.Surface(rect.size)
         s.set_colorkey((68,132,235), pygame.RLEACCEL)
         return s
+
+    def destroy(self):
+        destroyEvent = pygame.event.Event(Constants.PLATFORM_DELETE_EVENT, {"id": self.id, "x": self.x, "y": self.y, "width": self.width, "height": self.height})
+        pygame.event.post(destroyEvent)
