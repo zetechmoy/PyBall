@@ -1,5 +1,6 @@
 hscore = 2345678
 paidBalls = 0-1-8-6-12-10-2-3-5-4-7-9-13-11-14
-selectedBall = 14
-coins = 99999999999999999999715
+bonus = 0
+coins = 99999999999999999999722
+selectedBall = 6
 FPS = 30
